@@ -1,8 +1,9 @@
 name: ML Model Release Export
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "v*"
 
   workflow_dispatch:
 
@@ -42,37 +43,27 @@ jobs:
           mkdir -p models
 
       # ==============================
-      # 5. DEFINE VERSION (SAFE WAY)
+      # 5. Get version
       # ==============================
       - name: Set version
         run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
-            echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-          else
-            echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
-          fi
+          echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
 
       # ==============================
-      # 6. Run ML script
+      # 6. Run ML
       # ==============================
       - name: Run model export script
         run: |
           python javascript/scripts/export_model.py $VERSION
 
       # ==============================
-      # 7. Check outputs
+      # 7. Create GitHub Release (IMPORTANT)
       # ==============================
-      - name: Check generated files
-        run: |
-          ls -R models
-
-      # ==============================
-      # 8. Upload release assets
-      # ==============================
-      - name: Upload assets to release
-        if: github.event_name == 'release'
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.VERSION }}
+          name: ML Model ${{ env.VERSION }}
           files: |
             models/model.pkl
             models/vectorizer.pkl
