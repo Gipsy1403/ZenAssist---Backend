@@ -43,27 +43,27 @@ jobs:
           mkdir -p models
 
       # ==============================
-      # 5. Get version
-      # ==============================
-      - name: Set version
-        run: |
-          echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
-
-      # ==============================
-      # 6. Run ML
+      # 5. Run ML model training
       # ==============================
       - name: Run model export script
         run: |
-          python javascript/scripts/export_model.py $VERSION
+          python javascript/scripts/export_model.py ${{ github.ref_name }}
 
       # ==============================
-      # 7. Create GitHub Release (IMPORTANT)
+      # 6. Check outputs
+      # ==============================
+      - name: Check generated files
+        run: |
+          ls -R models
+
+      # ==============================
+      # 7. Create GitHub Release + upload assets
       # ==============================
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.VERSION }}
-          name: ML Model ${{ env.VERSION }}
+          tag_name: ${{ github.ref_name }}
+          name: ML Model ${{ github.ref_name }}
           files: |
             models/model.pkl
             models/vectorizer.pkl
