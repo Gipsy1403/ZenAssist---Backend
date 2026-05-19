@@ -50,8 +50,8 @@ yarn-error.log*
 Thumbs.db
 
 # datasets
-!datasets/
-!datasets/dataset.csv
+javascript/datasets/*.csv
+!javascript/datasets/dataset_sample.csv
 *.parquet
 
 # models
