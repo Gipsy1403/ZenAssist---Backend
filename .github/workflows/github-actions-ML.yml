@@ -7,6 +7,9 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-and-export-model:
     runs-on: ubuntu-latest
@@ -39,25 +42,17 @@ jobs:
       # 4. Create folders
       # ==============================
       - name: Create folders
-        run: |
-          mkdir -p models
+        run: mkdir -p models
 
       # ==============================
-      # 5. Run ML model training
+      # 5. Run ML training
       # ==============================
       - name: Run model export script
         run: |
           python javascript/scripts/export_model.py ${{ github.ref_name }}
 
       # ==============================
-      # 6. Check outputs
-      # ==============================
-      - name: Check generated files
-        run: |
-          ls -R models
-
-      # ==============================
-      # 7. Create GitHub Release + upload assets
+      # 6. Create GitHub Release
       # ==============================
       - name: Create Release
         uses: softprops/action-gh-release@v2
