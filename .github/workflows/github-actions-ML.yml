@@ -46,7 +46,7 @@ jobs:
       # ==============================
       - name: Run model export script
         run: |
-          python javascript/scripts/export_model.py
+          python javascript/scripts/export_model.py ${{ github.event.release.tag_name }}
 
       # ==============================
       # 6. Vérification des fichiers générés
@@ -58,11 +58,22 @@ jobs:
       # ==============================
       # 7. Upload des assets dans la release
       # ==============================
+     #  - name: Upload release assets
+     #    uses: softprops/action-gh-release@v2
+     #    with:
+     #      files: |
+     #        models/model.pkl
+     #        models/vectorizer.pkl
+     #        models/label_encoder.pkl
+     #        models/metrics.json
+
       - name: Upload release assets
-        uses: softprops/action-gh-release@v2
+        uses: svenstaro/upload-release-action@v2
         with:
-          files: |
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: |
             models/model.pkl
             models/vectorizer.pkl
             models/label_encoder.pkl
             models/metrics.json
+          tag: ${{ github.event.release.tag_name }}
