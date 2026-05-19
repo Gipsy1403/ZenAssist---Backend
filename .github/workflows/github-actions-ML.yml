@@ -52,7 +52,14 @@ jobs:
           python javascript/scripts/export_model.py ${{ github.ref_name }}
 
       # ==============================
-      # 6. Create GitHub Release
+      # 6. Test exported model
+      # ==============================
+      - name: Test exported model
+        run: |
+           python javascript/scripts/test_model.py
+
+      # ==============================
+      # 7. Create GitHub Release
       # ==============================
       - name: Create Release
         uses: softprops/action-gh-release@v2
