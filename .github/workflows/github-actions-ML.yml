@@ -69,13 +69,12 @@ jobs:
       # ==============================
       # 8. Upload release assets
       # ==============================
-      - name: Upload release assets
-        uses: svenstaro/upload-release-action@v2
+      - name: Upload assets to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: |
+          files: |
             models/model.pkl
             models/vectorizer.pkl
             models/label_encoder.pkl
             models/metrics.json
-          tag: ${{ github.event.release.tag_name }}
