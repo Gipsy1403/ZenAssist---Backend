@@ -13,7 +13,7 @@ jobs:
     steps:
 
       # ==============================
-      # 1. Récupération du code
+      # 1. Checkout
       # ==============================
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
           python-version: "3.11"
 
       # ==============================
-      # 3. Installation des dépendances
+      # 3. Install dependencies
       # ==============================
       - name: Install dependencies
         run: |
@@ -35,38 +35,40 @@ jobs:
           pip install -r requirements.txt
 
       # ==============================
-      # 4. Création des dossiers nécessaires
+      # 4. Create folders
       # ==============================
       - name: Create folders
         run: |
           mkdir -p models
 
       # ==============================
-      # 5. Lancement du script ML
+      # 5. DEFINE VERSION (SAFE WAY)
+      # ==============================
+      - name: Set version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          else
+            echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+
+      # ==============================
+      # 6. Run ML script
       # ==============================
       - name: Run model export script
         run: |
-          python javascript/scripts/export_model.py ${{ github.event.release.tag_name }}
+          python javascript/scripts/export_model.py $VERSION
 
       # ==============================
-      # 6. Vérification des fichiers générés
-      # ============================== 
+      # 7. Check outputs
+      # ==============================
       - name: Check generated files
         run: |
           ls -R models
 
       # ==============================
-      # 7. Upload des assets dans la release
+      # 8. Upload release assets
       # ==============================
-     #  - name: Upload release assets
-     #    uses: softprops/action-gh-release@v2
-     #    with:
-     #      files: |
-     #        models/model.pkl
-     #        models/vectorizer.pkl
-     #        models/label_encoder.pkl
-     #        models/metrics.json
-
       - name: Upload release assets
         uses: svenstaro/upload-release-action@v2
         with:
@@ -76,4 +78,4 @@ jobs:
             models/vectorizer.pkl
             models/label_encoder.pkl
             models/metrics.json
-          tag: ${{ github.event.release.tag_name || github.ref_name }}
+          tag: ${{ github.event.release.tag_name }}
