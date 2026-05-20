@@ -116,11 +116,11 @@ jobs:
 
     - name: Train model
       run: |
-        python scripts/export_model.py ${GITHUB_REF_NAME}
+        python javascript/scripts/export_model.py ${GITHUB_REF_NAME}
 
     - name: Test model
       run: |
-        python scripts/test_model.py ${GITHUB_REF_NAME}
+        python javascript/scripts/test_model.py ${GITHUB_REF_NAME}
 
     - name: Verify files
       run: ls -lh models
