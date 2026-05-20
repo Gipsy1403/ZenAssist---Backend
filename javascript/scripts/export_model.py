@@ -399,7 +399,7 @@ print(f"🚀 Model version: {version}")
 # =========================
 # LOAD DATA
 # =========================
-df = pd.read_csv("scripts/datasets/dataset_sample.csv")
+df = pd.read_csv("javascript/datasets/dataset_sample.csv")
 
 
 # =========================
