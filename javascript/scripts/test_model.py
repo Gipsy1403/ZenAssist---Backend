@@ -1,16 +1,23 @@
 import pickle
+import sys
+
+# =========================
+# VERSION
+# =========================
+
+version = sys.argv[1] if len(sys.argv) > 1 else "V.x.x"
 
 # =========================
 # LOAD FILES
 # =========================
 
-with open("models/model.pkl", "rb") as f:
+with open(f"models/{version}_model.pkl", "rb") as f:
     model = pickle.load(f)
 
-with open("models/vectorizer.pkl", "rb") as f:
+with open(f"models/{version}_vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)
 
-with open("models/label_encoder.pkl", "rb") as f:
+with open(f"models/{version}_label_encoder.pkl", "rb") as f:
     label_encoder = pickle.load(f)
 
 # =========================
