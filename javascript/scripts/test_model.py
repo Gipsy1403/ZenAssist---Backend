@@ -5,7 +5,7 @@ import sys
 # VERSION
 # =========================
 
-version = sys.argv[1] if len(sys.argv) > 1 else "V.x.x"
+version = sys.argv[1] if len(sys.argv) > 1 else "v1"
 
 # =========================
 # LOAD FILES
