@@ -1,3 +1,4 @@
+# ML MODEL RELEASE AVEC TAG AUTOMATIQUE
 # name: ML Model Release Export
 
 # on:
@@ -79,18 +80,18 @@
 #             models/${{ github.ref_name }}_metrics.json
 
 
+# ML MODEL RELEASE SANS TAG AUTOMATIQUE
 name: ML Model Release Export
 
 on:
   push:
     tags:
-      - "v*"
+      - "v*"   # déclenche le workflow quand tu pushes un tag v1.0.0, v2.0.0, etc.
 
-  workflow_dispatch:
+  workflow_dispatch: # permet de lancer manuellement le workflow
 
 permissions:
-  contents: write
-
+  contents: write  # obligatoire pour créer une release GitHub
 
 jobs:
   build:
@@ -98,38 +99,63 @@ jobs:
 
     steps:
 
-    - name: Checkout
+    # =========================================================
+    # 1. RÉCUPÉRATION DU CODE
+    # =========================================================
+    - name: Checkout repository
       uses: actions/checkout@v4
 
+    # =========================================================
+    # 2. INSTALLATION DE PYTHON
+    # =========================================================
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
         python-version: "3.11"
 
-    - name: Install deps
+    # =========================================================
+    # 3. INSTALLATION DES DÉPENDANCES
+    # =========================================================
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Check structure
+    # =========================================================
+    # 4. VÉRIFICATION DE LA STRUCTURE DU PROJET
+    # =========================================================
+    - name: Check project structure
       run: ls -R
 
-    - name: Train model
+    # =========================================================
+    # 5. ENTRAÎNEMENT + EXPORT DU MODÈLE
+    # =========================================================
+    - name: Train and export model
       run: |
         python javascript/scripts/export_model.py ${GITHUB_REF_NAME}
+        # ${GITHUB_REF_NAME} = nom du tag (ex: v1.0.0)
 
-    - name: Test model
+    # =========================================================
+    # 6. TEST DU MODÈLE EXPORTÉ
+    # =========================================================
+    - name: Test exported model
       run: |
         python javascript/scripts/test_model.py ${GITHUB_REF_NAME}
 
-    - name: Verify files
+    # =========================================================
+    # 7. VÉRIFICATION DES FICHIERS GÉNÉRÉS
+    # =========================================================
+    - name: Verify generated files
       run: ls -lh models
 
-    - name: Create Release
+    # =========================================================
+    # 8. CRÉATION DE LA RELEASE GITHUB
+    # =========================================================
+    - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.ref_name }}
-        name: ML Model ${{ github.ref_name }}
+        tag_name: ${{ github.ref_name }}  # tag utilisé pour la release
+        name: ML Model ${{ github.ref_name }}  # titre de la release
         files: |
           models/${{ github.ref_name }}_model.pkl
           models/${{ github.ref_name }}_vectorizer.pkl
