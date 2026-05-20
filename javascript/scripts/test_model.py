@@ -40,3 +40,4 @@ prediction = model.predict(X_new)
 predicted_label = label_encoder.inverse_transform(prediction)
 
 print("Prediction :", predicted_label[0])
+print("Model test successful")

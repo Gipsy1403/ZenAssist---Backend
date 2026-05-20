@@ -218,7 +218,8 @@ import sys
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
+# from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
 
 from sklearn.metrics import classification_report, accuracy_score
 
@@ -226,7 +227,7 @@ from sklearn.metrics import classification_report, accuracy_score
 # VERSION DU MODELE (GitHub tag)
 # =====================================================
 
-version = sys.argv[1] if len(sys.argv) > 1 else "dev"
+version = sys.argv[1] if len(sys.argv) > 1 else "V.x.x"
 
 print(f"Model version: {version}")
 
@@ -313,9 +314,11 @@ X_train, X_test, y_train, y_test = train_test_split(
 # =====================================================
 
 vectorizer = TfidfVectorizer(
-    max_features=5000,
-    max_df=0.9,
-    min_df=2
+    max_features=10000,
+    max_df=0.95,
+    min_df=2,
+    ngram_range=(1,2),
+    stop_words="english"
 )
 
 X_train_vec = vectorizer.fit_transform(X_train)
@@ -325,7 +328,8 @@ X_test_vec = vectorizer.transform(X_test)
 # MODEL
 # =====================================================
 
-model = LogisticRegression(max_iter=1000, random_state=42)
+# model = LogisticRegression(max_iter=1000, random_state=42, class_weight="balanced")
+model = LinearSVC(random_state=42, class_weight="balanced")
 model.fit(X_train_vec, y_train)
 
 # =====================================================
@@ -344,6 +348,7 @@ report = classification_report(y_test, y_pred, output_dict=True)
 metrics = {
     "version": version,
     "accuracy": accuracy,
+    "labels": dict(enumerate(le.classes_)),
     "classification_report": report
 }
 
@@ -353,16 +358,16 @@ metrics = {
 
 os.makedirs("models", exist_ok=True)
 
-with open("models/model.pkl", "wb") as f:
+with open(f"models/{version}_model.pkl", "wb") as f:
     pickle.dump(model, f)
 
-with open("models/vectorizer.pkl", "wb") as f:
+with open(f"models/{version}_vectorizer.pkl", "wb") as f:
     pickle.dump(vectorizer, f)
 
-with open("models/label_encoder.pkl", "wb") as f:
+with open(f"models/{version}_label_encoder.pkl", "wb") as f:
     pickle.dump(le, f)
 
-with open("models/metrics.json", "w") as f:
+with open(f"models/{version}_metrics.json", "w") as f:
     json.dump(metrics, f, indent=2)
 
 print("Export terminé")
