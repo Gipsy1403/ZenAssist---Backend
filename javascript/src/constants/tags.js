@@ -10,5 +10,6 @@ export const ALLOWED_TAGS = [
   'Bank account or service',
   'Money transfer, virtual currency, or money service',
   'Money transfers',
-  'Other financial services'
+  'Other financial services',
+  "Credit reporting, credit repair services, or other personal consumer reports"
 ];
