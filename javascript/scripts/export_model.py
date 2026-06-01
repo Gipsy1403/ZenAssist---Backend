@@ -38,7 +38,7 @@ print(f"✅ Dataset chargé : {len(df)} lignes")
 
 
 # =====================================================
-# NORMALISATION DES COMPAGNIES
+# NORMALISATION DES ENTREPRISES
 # =====================================================
 
 # Nettoyage des noms de compagnies

@@ -44,6 +44,7 @@ export async function predictClaimTag(userClaim) {
 
   return response.json();
 }
+
 export async function updateClaimTag(claimId, tag) {
   const response = await fetch(`${BASE_URL}/${claimId}/tag`, {
     method: 'PUT',

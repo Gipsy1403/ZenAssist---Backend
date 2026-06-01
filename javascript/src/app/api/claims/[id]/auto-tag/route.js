@@ -165,19 +165,19 @@ export async function POST(request, { params }) {
 
 	const TAG_MAPPING = {
 
-		"credit reporting":
+		"credit_reporting":
 		"Credit reporting, credit repair services, or other personal consumer reports",
 
-		"credit card":
+		"credit_card":
 		"Credit card or prepaid card",
 
-		"prepaid card":
+		"prepaid_card":
 		"Credit card or prepaid card",
 
-		"payday loan":
+		"payday_loan":
 		"Payday loan, title loan, or personal loan",
 
-		"virtual currency":
+		"virtual_currency":
 		"Money transfer, virtual currency, or money service",
 	};
 

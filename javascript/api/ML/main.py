@@ -51,7 +51,7 @@ with open(MODELS_DIR / f"{MODEL_VERSION}_label_encoder.pkl", "rb") as f:
 
 
 # ==================================================
-# REQUEST BODY
+# REQUEST BODY JSON
 # ==================================================
 
 class ClaimRequest(BaseModel):
@@ -64,7 +64,7 @@ class ClaimRequest(BaseModel):
 
 @app.get("/")
 def home():
-    return {"message": "API running"}
+    return {"message": "API OK"}
 
 
 # ==================================================
